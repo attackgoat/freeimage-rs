@@ -236,6 +236,19 @@ impl Bitmap {
 	    ScanLinesMut{ bitmap: self, line: 0 }
 	}
 
+    pub fn convert_bpp(&mut self, bpp: usize) {
+        let p = self.ptr;
+
+        unsafe {
+            match bpp {
+                32 => self.ptr = ffi::FreeImage_ConvertTo32Bits(p),
+                _ => unimplemented!()
+            }
+
+            ffi::FreeImage_Unload(p);
+        }
+    }
+
     pub fn flip_vertical(self) -> Result<Bitmap,String>{
         unsafe{
             if ffi::FreeImage_FlipVertical(self.ptr) == 0{
