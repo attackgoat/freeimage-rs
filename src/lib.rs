@@ -150,6 +150,12 @@ impl Bitmap {
 	pub fn save(&self, filename: &str, flags: i32) -> Result<(),String>{
 	    unsafe{
 	        let format = file_type_from_name(filename);
+	        self.save_as(filename, format, flags)
+	    }
+	}
+
+    pub fn save_as(&self, filename: &str, format: Format, flags: i32) -> Result<(),String>{
+	    unsafe{
 	        if supports_writting(format){
 				ffi::FreeImage_Save(format, self.ptr, CString::new(filename.as_bytes()).unwrap().as_ptr(),flags);
                 Ok(())
